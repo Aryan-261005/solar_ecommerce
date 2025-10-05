@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout - VINWORTH</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #f0f4ff, #ffffff);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 60px auto;
+            background: white;
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        h2 {
+            text-align: center;
+            color: #007bff;
+            font-size: 28px;
+            margin-bottom: 30px;
+        }
+
+        .order-summary {
+            margin-bottom: 30px;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 8px 12px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .order-item p {
+            margin: 0;
+            font-size: 15px;
+            color: #333;
+        }
+
+        .total {
+            text-align: right;
+            font-weight: bold;
+            font-size: 18px;
+            margin-top: 15px;
+            color: #222;
+        }
+
+        .confirm-btn {
+            width: 100%;
+            background-color: #28a745;
+            color: #fff;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .confirm-btn:hover {
+            background-color: #218838;
+            transform: scale(1.02);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 600px) {
+            .order-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .total {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Confirm Your Order</h2>
+    <div class="order-summary">
+        {% if cart %}
+            {% for product_id, item in cart.items() %}
+                <div class="order-item">
+                    <p>{{ item.name }} × {{ item.quantity }}</p>
+                    <p>₹{{ item.price * item.quantity }}</p>
+                </div>
+            {% endfor %}
+            <div class="total">Total: ₹{{ total }}</div>
+        {% else %}
+            <p style="text-align:center; color:#777;">Your cart is empty.</p>
+        {% endif %}
+    </div>
+
+    {% if cart %}
+    <form method="POST" action="{{ url_for('checkout_page') }}">
+        <button type="submit" class="confirm-btn">Place Order</button>
+    </form>
+    {% endif %}
+</div>
+
+</body>
+</html>

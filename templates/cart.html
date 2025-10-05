@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cart - VINWORTH</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f0f4ff, #ffffff);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 40px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        h2 {
+            text-align: center;
+            color: #007bff;
+            font-size: 28px;
+            margin-bottom: 30px;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #ddd;
+            animation: fadeIn 0.6s ease-out;
+            flex-wrap: wrap;
+        }
+
+        .cart-item img {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            transition: transform 0.3s;
+        }
+
+        .cart-item img:hover {
+            transform: scale(1.05);
+        }
+
+        .cart-item-details {
+            flex: 2;
+            padding: 0 20px;
+            min-width: 200px;
+        }
+
+        .cart-item-details h3 {
+            color: #007bff;
+            font-size: 18px;
+            margin: 0 0 5px 0;
+        }
+
+        .cart-item-details p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .cart-item-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .remove-btn, .update-btn, .checkout-btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .remove-btn {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .remove-btn:hover {
+            background-color: #c82333;
+        }
+
+        .update-btn {
+            background-color: #ffc107;
+            color: #fff;
+        }
+
+        .update-btn:hover {
+            background-color: #e0a800;
+        }
+
+        .checkout-btn {
+            background-color: #28a745;
+            color: #fff;
+            width: 200px;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        .checkout-btn:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+        .total {
+            text-align: right;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 25px;
+            color: #333;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 600px) {
+            .cart-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .cart-item-actions {
+                margin-top: 10px;
+            }
+            .checkout-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Your Cart</h2>
+
+    {% if items %}
+        {% for item in items %}
+        <div class="cart-item">
+            <img src="{{ item[3] }}" alt="{{ item[1] }}">
+            <div class="cart-item-details">
+                <h3>{{ item[1] }}</h3>
+                <p>Price: ₹{{ item[2] }}</p>
+                <form method="POST" action="{{ url_for('update_cart', cart_id=item[0]) }}">
+                    <label>
+                        Quantity:
+                        <input type="number" name="quantity" value="{{ item[4] }}" min="1" style="width: 60px;">
+                    </label>
+                    <button type="submit" class="update-btn">Update</button>
+                </form>
+            </div>
+            <div class="cart-item-actions">
+                <form method="GET" action="{{ url_for('remove_cart', cart_id=item[0]) }}">
+                    <button type="submit" class="remove-btn">Remove</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+
+        <p class="total">Total: ₹{{ total }}</p>
+
+        <div style="text-align: center;">
+            <form method="GET" action="{{ url_for('checkout') }}">
+                <button type="submit" class="checkout-btn">Proceed to Checkout</button>
+            </form>
+        </div>
+
+    {% else %}
+        <p style="text-align: center; font-size: 16px; color: #777;">Your cart is empty.</p>
+    {% endif %}
+</div>
+
+</body>
+</html>

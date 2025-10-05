@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ product.name }} - SolarTech Store</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f7f9fc;
+            padding: 40px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #007BFF;
+            margin-bottom: 10px;
+        }
+        p {
+            margin: 5px 0;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .review, .review-form {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ccc;
+        }
+        .review p {
+            margin: 5px 0;
+        }
+        .review .rating {
+            color: #ffaa00;
+            font-weight: bold;
+        }
+        input, textarea, select {
+            padding: 10px;
+            width: 100%;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        textarea {
+            resize: vertical;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>{{ product.name }}</h2>
+        <p><strong>Price:</strong> ₹{{ product.price }}</p>
+        <img src="{{ product.image_url }}" alt="{{ product.name }}">
+
+        <!-- Add to Wishlist Form -->
+        <form action="/add-to-wishlist/{{ product.id }}" method="post">
+            <button type="submit">❤️ Add to Wishlist</button>
+        </form>
+
+        <!-- Reviews Section -->
+        <div class="review">
+            <h3>Customer Reviews</h3>
+            {% if reviews %}
+                {% for r in reviews %}
+                    <div>
+                        <p><strong>{{ r.first_name }}</strong> - <span class="rating">★{{ r.rating }}/5</span></p>
+                        <p>{{ r.comment }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No reviews yet.</p>
+            {% endif %}
+        </div>
+
+        <!-- Leave a Review Form -->
+        <div class="review-form">
+            <h3>Leave a Review</h3>
+            <form method="post" action="/submit-review/{{ product.id }}">
+                <label for="rating">Rating (1-5):</label>
+                <select name="rating" id="rating" required>
+                    <option value="">Select</option>
+                    {% for i in range(1,6) %}
+                        <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="comment">Comment:</label>
+                <textarea name="comment" id="comment" rows="4" required></textarea>
+
+                <button type="submit">Submit Review</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

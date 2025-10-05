@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Wishlist - SolarTech Store</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f2f4f8;
+            padding: 40px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #007BFF;
+            margin-bottom: 20px;
+        }
+        .product {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 15px;
+        }
+        .product img {
+            width: 120px;
+            margin-right: 20px;
+            border-radius: 8px;
+        }
+        .product-info {
+            flex-grow: 1;
+        }
+        .product-info h4 {
+            margin: 0 0 5px;
+        }
+        .product-info p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>My Wishlist</h2>
+        {% if wishlist %}
+            {% for item in wishlist %}
+                <div class="product">
+                    <img src="{{ item.image_url }}" alt="{{ item.name }}">
+                    <form method="post" action="/add-to-wishlist/{{ product.id }}">
+                    <div class="product-info">
+                        <h4>{{ item.name }}</h4>
+                        <p>₹{{ item.price }}</p>
+                        <a href="/product/{{ item.id }}">View Product</a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Your wishlist is empty.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

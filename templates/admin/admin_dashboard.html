@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f8f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 220px;
+            background-color: #2a7d2e;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            color: white;
+        }
+
+        .sidebar h3 {
+            margin-top: 0;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin: 15px 0;
+        }
+
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .sidebar ul li a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #2a7d2e;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="file"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        input[type="submit"] {
+            background-color: #2a7d2e;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #226623;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #2a7d2e;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        img {
+            max-height: 60px;
+            border-radius: 4px;
+        }
+
+        .preview {
+            margin-top: 10px;
+        }
+
+        .preview img {
+            max-height: 80px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+<div class="sidebar">
+    <h3>Admin Panel</h3>
+    <ul>
+        <li><a href="/admin/dashboard">Dashboard</a></li>
+        <li><a href="/admin/categories">Categories</a></li>
+        <li><a href="/admin/orders">Orders</a></li>
+        <li><a href="/admin/reports">Reports</a></li>
+        <li><a href="/admin/logout">Logout</a></li>
+    </ul>
+</div>
+
+<div class="container">
+    <h2>Admin Dashboard</h2>
+
+    <h3>Add Product</h3>
+    <form method="POST" action="{{ url_for('add_product') }}" enctype="multipart/form-data">
+        <input type="text" name="name" placeholder="Product Name" required>
+        <textarea name="description" placeholder="Product Description" required></textarea>
+        <input type="number" name="price" placeholder="Price" required>
+        <input type="file" name="image" id="imageInput" accept="image/*" required>
+        <div class="preview" id="previewContainer" style="display: none;">
+            <strong>Preview:</strong><br>
+            <img id="imagePreview" src="#" alt="Image Preview">
+        </div>
+        <input type="submit" value="Add Product">
+    </form>
+
+    <h3>Product List</h3>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price (₹)</th>
+            <th>Action</th>
+        </tr>
+        {% for product in products %}
+        <tr>
+            <td>{{ product.id }}</td>
+            <td>
+                {% if product.image %}
+                    <img src="{{ url_for('static', filename='uploads/' ~ product.image) }}" alt="Image">
+                {% else %}
+                    No Image
+                {% endif %}
+            </td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.description }}</td>
+            <td>{{ product.price }}</td>
+            <td>
+                <a href="{{ url_for('edit_product', id=product.id) }}" style="color: blue; margin-right: 10px;">Edit</a>
+                <a href="{{ url_for('delete_product', id=product.id) }}" style="color: red;">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<script>
+    const imageInput = document.getElementById('imageInput');
+    const previewContainer = document.getElementById('previewContainer');
+    const imagePreview = document.getElementById('imagePreview');
+
+    imageInput.addEventListener('change', function () {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            previewContainer.style.display = 'block';
+
+            reader.addEventListener('load', function () {
+                imagePreview.setAttribute('src', this.result);
+            });
+
+            reader.readAsDataURL(file);
+        } else {
+            previewContainer.style.display = 'none';
+        }
+    });
+</script>
+
+</body>
+</html>
